@@ -68,6 +68,17 @@ body {
     }
 }
 
+@keyframes burgerFadeIn {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 .header-content {
     display: flex;
     justify-content: space-between;
@@ -166,33 +177,41 @@ body {
 }
 
 .burger {
-    display: none;
+    display: flex;
     flex-direction: column;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
+    opacity: 0;
+    transform: translateX(50px);
 }
 
 .burger span {
-    display: block;
+    display: flex;
     width: 25px;
     height: 2px;
     background-color: var(--color-black);
-    transition: all var(--transition-speed) var(--transition-smooth);
+    /* Фиксируем начальные значения, чтобы браузер не тупил */
+    transform: translateY(0) rotate(0);
+    /* Анимируем только то, что реально меняется при клике */
+    transition: transform var(--transition-speed) var(--transition-smooth),
+    opacity var(--transition-speed) var(--transition-smooth),
+    background-color var(--transition-speed) var(--transition-smooth);
 }
 
 .burger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(7px, 7px);
+    transform: translateY(7px) rotate(45deg);
 }
 
 .burger.active span:nth-child(2) {
     opacity: 0;
+    transform: translateX(-20px); /* Улетает в бок, чтобы не мешать */
 }
 
 .burger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ===== Hero Section ===== */
@@ -709,6 +728,23 @@ body {
 @media (max-width: 768px) {
     .burger {
         display: flex;
+        transform: translateX(50px);
+        opacity: 0;
+        animation: burgerFadeIn 0.8s var(--transition-smooth) 0.2s forwards;
+    }
+
+    .burger span {
+        background-color: var(--color-white);
+        /* Важно: transition ТОЛЬКО для трансформации в крест */
+        transition: transform var(--transition-speed) var(--transition-smooth),
+        background-color var(--transition-speed),
+        opacity var(--transition-speed);
+    }
+
+    .burger.active span {
+        background-color: var(--color-black);
+        /* Отключаем анимацию появления, когда меню активно, чтобы не дергалось */
+        animation: none;
     }
 
     .nav {
@@ -726,6 +762,19 @@ body {
         opacity: 0;
         visibility: hidden;
         transition: all var(--transition-speed) var(--transition-smooth);
+    }
+
+    .nav-link {
+        color: var(--color-black); /* ЗАМЕНИ var(--color-white) НА ЭТО */
+    }
+
+    .lang-btn.active {
+        color: var(--color-black); /* И ТУТ ТОЖЕ */
+    }
+
+    /* И чтобы сам бургер не исчез на белом фоне при открытии: */
+    .burger.active span {
+        background-color: var(--color-white);
     }
 
     .nav.active {
